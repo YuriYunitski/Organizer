@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="gray_blue_500">#293A4C</color>
+    <color name="gray_blue_700">#1F2B39</color>
+    <color name="tus_200">#34475E</color>
+    <color name="tus_700">#374B63</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
