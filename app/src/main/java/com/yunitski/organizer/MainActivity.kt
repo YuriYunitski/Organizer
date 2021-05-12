@@ -56,23 +56,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onClick(v: View?) {
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setCancelable(false)
-        builder.setTitle("try")
-        val inflater: LayoutInflater = layoutInflater
-        val view: View = inflater.inflate(R.layout.add_dialog, null)
-        builder.setView(view)
-        inputValue = view.findViewById(R.id.et_add_dialog)
-        builder.setPositiveButton("ok", DialogInterface.OnClickListener { dialog, which ->
-            sharedPreferences = getSharedPreferences("note", Context.MODE_PRIVATE)
-            val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
-            editor?.putString("n", inputValue?.text.toString())
-            editor?.apply()
-        })
-        builder.setNegativeButton("cancel", DialogInterface.OnClickListener { dialog, which ->  })
-        val dialog = builder.create()
-        dialog.show()
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#374B63")))
+
+
+//        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+//        builder.setCancelable(false)
+//        builder.setTitle("try")
+//        val inflater: LayoutInflater = layoutInflater
+//        val view: View = inflater.inflate(R.layout.add_dialog, null)
+//        builder.setView(view)
+//        inputValue = view.findViewById(R.id.et_add_dialog)
+//        builder.setPositiveButton("ok", DialogInterface.OnClickListener { dialog, which ->
+//            sharedPreferences = getSharedPreferences("note", Context.MODE_PRIVATE)
+//            val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
+//            editor?.putString("n", inputValue?.text.toString())
+//            editor?.apply()
+//        })
+//        builder.setNegativeButton("cancel", DialogInterface.OnClickListener { dialog, which ->  })
+//        val dialog = builder.create()
+//        dialog.show()
+//        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#374B63")))
     }
 
     fun updateUi(){
