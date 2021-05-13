@@ -18,9 +18,6 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
     private lateinit var message: EditText
     private var backNSave: ImageButton? = null
     private lateinit var myDBHandler: MyDBHandler
-    private var idList: MutableList<String>? = null
-    private var titleList: MutableList<String>? = null
-    private var messageList: MutableList<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +36,7 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
         val id: Int? = v?.id
         when (id) {
             R.id.ib_back_n_save -> {
-                if (!title.text.toString().isEmpty() || !message.text.toString().isEmpty()) {
+                if (title.text.toString().isNotEmpty() || message.text.toString().isNotEmpty()) {
                     val values = ContentValues()
                     values.put(MyDBHandler.COLUMN_TITLE, title.text.toString())
                     values.put(MyDBHandler.COLUMN_MESSAGE, message.text.toString())
@@ -61,32 +58,6 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
         val imm = getSystemService(
             INPUT_METHOD_SERVICE
         ) as InputMethodManager
-        imm.hideSoftInputFromWindow(message?.windowToken, 0)
+        imm.hideSoftInputFromWindow(message.windowToken, 0)
     }
-//    private fun save(){
-//        val db: SQLiteDatabase? = dbHelper?.writableDatabase
-//        val cursor: Cursor? = db?.query(
-//            InputData.TaskEntry.TABLE,
-//            arrayOf<String>(
-//                InputData.TaskEntry.ID,
-//                InputData.TaskEntry.TITLE,
-//                InputData.TaskEntry.MESSAGE
-//            ),
-//            null,
-//            null,
-//            null,
-//            null,
-//            null
-//        )
-//        while (cursor?.moveToNext() == true){
-//            val indexID: Int =cursor.getColumnIndex(InputData.TaskEntry.ID)
-//            val indexTITLE: Int = cursor.getColumnIndex(InputData.TaskEntry.TITLE)
-//            val indexMESSAGE: Int = cursor.getColumnIndex(InputData.TaskEntry.MESSAGE)
-//            idList?.add(cursor.getString(indexID))
-//            titleList?.add(cursor.getString(indexTITLE))
-//            messageList?.add(cursor.getString(indexMESSAGE))
-//        }
-//        cursor?.close()
-//        db?.close()
-//    }
 }

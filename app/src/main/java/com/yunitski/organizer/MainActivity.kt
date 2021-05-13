@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ElementAdapter
     private var isAd: Boolean = false
+    private lateinit var t: String
+    private lateinit var m: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,26 +70,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(Intent(this, NewNote::class.java))
             }
         }
-
-
-
-//        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-//        builder.setCancelable(false)
-//        builder.setTitle("try")
-//        val inflater: LayoutInflater = layoutInflater
-//        val view: View = inflater.inflate(R.layout.add_dialog, null)
-//        builder.setView(view)
-//        inputValue = view.findViewById(R.id.et_add_dialog)
-//        builder.setPositiveButton("ok", DialogInterface.OnClickListener { dialog, which ->
-//            sharedPreferences = getSharedPreferences("note", Context.MODE_PRIVATE)
-//            val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
-//            editor?.putString("n", inputValue?.text.toString())
-//            editor?.apply()
-//        })
-//        builder.setNegativeButton("cancel", DialogInterface.OnClickListener { dialog, which ->  })
-//        val dialog = builder.create()
-//        dialog.show()
-//        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#374B63")))
     }
 
     private fun updateUi() {
@@ -123,11 +105,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         recyclerView.adapter = adapter
         adapter.onItemClick = { pos ->
-            val intent: Intent = Intent(this, EditNote::class.java)
-            intent.putExtra("ttl", titleList.get(pos))
-            intent.putExtra("msg", messageList.get(pos))
+            val intent = Intent(this, EditNote::class.java)
+            intent.putExtra("ttl", titleList[pos])
+            intent.putExtra("msg", messageList[pos])
+            intent.putExtra("id", idList[pos])
             startActivity(intent)
-            Toast.makeText(this, " " + idList.get(pos) + " " + titleList.get(pos), Toast.LENGTH_SHORT).show()
         }
     //        listView.adapter = adapter
 //        listView.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
