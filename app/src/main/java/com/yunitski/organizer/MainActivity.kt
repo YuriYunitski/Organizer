@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -25,8 +24,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ElementAdapter
     private var isAd: Boolean = false
-    private lateinit var t: String
-    private lateinit var m: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +76,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val messageList: MutableList<String> = mutableListOf()
         val titleList: MutableList<String> = mutableListOf()
         val elements: MutableList<Element> = mutableListOf()
-        val myDBHandler: MyDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
+        val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
         val db: SQLiteDatabase = myDBHandler.readableDatabase
         val cursor: Cursor = db.rawQuery("SELECT * FROM " + MyDBHandler.TABLE_NOTES + ";", null)
         while (cursor.moveToNext()){
