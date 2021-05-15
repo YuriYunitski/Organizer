@@ -30,9 +30,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="5dp"
         android:maxLines="1"
         android:text="TextView"
         android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/id_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="1sp"
+        android:textColor="@color/white"/>
 
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -23,10 +24,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private var toolBar: Toolbar? = null
     private var fab: FloatingActionButton? = null
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ElementAdapter
-    private var isAd: Boolean = false
-    val idList: MutableList<String> = mutableListOf()
+    var posCont: Int = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,22 +55,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         searchView.queryHint = "Текст для поиска"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
+                adapter.filter.filter(query)
                 return false
             }
             override fun onQueryTextChange(newText: String): Boolean {
-                adapter.getFilter().filter(newText)
-                return true
+                adapter.filter.filter(newText)
+                return false
             }
 
         })
+        updateUi()
         return true
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val position: Int = adapter.getPosition()
-        val p: String = idList[position]
-        deleteFromBase(p)
+        val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
+        val db: SQLiteDatabase = myDBHandler.writableDatabase
+        db.delete(MyDBHandler.TABLE_NOTES, MyDBHandler.COLUMN_ID + "=?", arrayOf(position.toString()))
         updateUi()
+//        val p: String = idList[position]
+//        deleteFromBase(p)
+//        idList.clear()
+//        updateUi()
         return super.onContextItemSelected(item)
     }
 
@@ -78,6 +85,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onResume()
         updateUi()
     }
+
+//    override fun onRestart() {
+//        super.onRestart()
+//        updateUi()
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        updateUi()
+//    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return true
@@ -87,17 +104,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val id: Int? = v?.id
         when(id){
             R.id.floatingActionButton2 ->{
-                startActivity(Intent(this, NewNote::class.java))
+                startActivityForResult(Intent(this, NewNote::class.java), 1000)
             }
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1000){
+            updateUi()
+        }
+    }
+
     private fun updateUi() {
-        recyclerView = findViewById(R.id.recycler_list)
+        val recyclerView: RecyclerView = findViewById(R.id.recycler_list)
         recyclerView.layoutManager = LinearLayoutManager(this)
         val messageList: MutableList<String> = mutableListOf()
         val titleList: MutableList<String> = mutableListOf()
         val elements: MutableList<Element> = mutableListOf()
+        val idList: MutableList<String> = mutableListOf()
         val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
         val db: SQLiteDatabase = myDBHandler.readableDatabase
         val cursor: Cursor = db.rawQuery("SELECT * FROM " + MyDBHandler.TABLE_NOTES + ";", null)
@@ -112,32 +137,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 titleList.add(0, sp[0])
                 if (sp.size > 1) {
                     messageList.add(0, sp[1])
-                    elements.add(0, Element(sp[0], sp[1]))
+                    elements.add(0, Element(sp[0], sp[1], cursor.getString(idx1)))
                 } else {
-                    elements.add(0, Element(sp[0], ""))
+                    elements.add(0, Element(sp[0], "", cursor.getString(idx1)))
                 }
             } else {
                 idList.add(0, cursor.getString(idx1))
                 titleList.add(0, cursor.getString(idx2))
                 messageList.add(0, cursor.getString(idx3))
-                elements.add(0, Element(cursor.getString(idx2), cursor.getString(idx3)))
+                elements.add(0, Element(cursor.getString(idx2), cursor.getString(idx3), cursor.getString(idx1)))
             }
         }
 
         db.close()
         cursor.close()
 
-        if (!isAd) {
+
             adapter = ElementAdapter(this, elements, this)
-            isAd = true
-        } else {
-            adapter.clear()
-            adapter.addAll(elements)
-            adapter.notifyDataSetChanged()
-        }
+
+
 
         recyclerView.adapter = adapter
-        //recyclerView.addOnItemTouchListener(ElementAdapter.ElementAdapterListener(application, ElementAdapter.ElementAdapterListener.onElementSelected()))
+        recyclerView.addOnItemTouchListener(
+            ElementTouchListener(
+                applicationContext,
+                object : ElementTouchListener.OnItemClickListener {
+                    override fun onItemClick(view: View?, position: Int) {
+                        //Place item click action here
+                        Toast.makeText(
+                            applicationContext,
+                            "You clicked " + idList[position],
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+        )
 //        adapter.onItemClick = { pos ->
 //            //val ap: Int = elements.indexOf(adapter.getItem(pos))
 //            val intent = Intent(this, EditNote::class.java)
@@ -159,6 +193,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onElementSelected(elts: Element?) {
-
+        posCont = elts?.id?.toInt()!!
+        val intent = Intent(this, EditNote::class.java)
+        intent.putExtra("id", elts.id)
+        startActivity(intent)
+//        Toast.makeText(applicationContext, "" + elts?.id, Toast.LENGTH_LONG).show();
     }
+
 }

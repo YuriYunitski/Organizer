@@ -2,6 +2,7 @@ package com.yunitski.organizer
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.View
@@ -70,6 +71,8 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
             val db: SQLiteDatabase = myDBHandler.writableDatabase
             db.insert(MyDBHandler.TABLE_NOTES, null, values)
             db.close()
+            val intent = Intent()
+            setResult(1000, intent)
         }
     }
     private fun showKb(){
