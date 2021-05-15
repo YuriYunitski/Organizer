@@ -17,6 +17,7 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
     private lateinit var message: EditText
     private var backNSave: ImageButton? = null
     private lateinit var myDBHandler: MyDBHandler
+    private var isSaved: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,21 +32,44 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!isSaved) {
+            save()
+            isSaved = true
+        }
+        hideKb()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (!isSaved) {
+            save()
+            isSaved = true
+        }
+    }
+
     override fun onClick(v: View?) {
         val id: Int? = v?.id
         when (id) {
             R.id.ib_back_n_save -> {
-                if (title.text.toString().isNotEmpty() || message.text.toString().isNotEmpty()) {
-                    val values = ContentValues()
-                    values.put(MyDBHandler.COLUMN_TITLE, title.text.toString())
-                    values.put(MyDBHandler.COLUMN_MESSAGE, message.text.toString())
-                    val db: SQLiteDatabase = myDBHandler.writableDatabase
-                    db.insert(MyDBHandler.TABLE_NOTES, null, values)
-                    db.close()
+                if (!isSaved) {
+                    save()
+                    isSaved = true
                 }
-                    hideKb()
-                    finish()
+                hideKb()
+                finish()
             }
+        }
+    }
+    private fun save(){
+        if (title.text.toString().isNotEmpty() || message.text.toString().isNotEmpty()) {
+            val values = ContentValues()
+            values.put(MyDBHandler.COLUMN_TITLE, title.text.toString())
+            values.put(MyDBHandler.COLUMN_MESSAGE, message.text.toString())
+            val db: SQLiteDatabase = myDBHandler.writableDatabase
+            db.insert(MyDBHandler.TABLE_NOTES, null, values)
+            db.close()
         }
     }
     private fun showKb(){
