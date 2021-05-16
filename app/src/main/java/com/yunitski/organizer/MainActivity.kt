@@ -6,12 +6,15 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +46,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
+        val bg: ConstraintLayout = findViewById(R.id.const_lay_main)
+
         fab = findViewById(R.id.floatingActionButton2)
         fab?.setOnClickListener(this)
         updateUi()
@@ -104,9 +109,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val id: Int? = v?.id
         when(id){
             R.id.floatingActionButton2 ->{
-                startActivityForResult(Intent(this, NewNote::class.java), 1000)
+                newNote()
             }
         }
+    }
+
+    fun newNote(){
+        startActivityForResult(Intent(this, NewNote::class.java), 1000)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -172,6 +181,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 })
         )
+//        recyclerView.setOnTouchListener(object : OnSwipeTouchListener(applicationContext) {
+//
+//            override fun onSwipeTop() {
+//                Toast.makeText(applicationContext, "top", Toast.LENGTH_SHORT).show()
+//
+//            }
+//
+//            override fun onSwipeRight() {
+//                Toast.makeText(applicationContext, "right", Toast.LENGTH_SHORT).show()
+//            }
+//
+//            override fun onSwipeLeft(){
+//                Toast.makeText(applicationContext, "left", Toast.LENGTH_SHORT).show()
+//                newNote()
+//            }
+//
+//            override fun onSwipeBottom() {
+//                Toast.makeText(applicationContext, "bottom", Toast.LENGTH_SHORT).show()
+//            }
+//        })
 //        adapter.onItemClick = { pos ->
 //            //val ap: Int = elements.indexOf(adapter.getItem(pos))
 //            val intent = Intent(this, EditNote::class.java)
