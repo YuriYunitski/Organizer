@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gray_blue_500"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="@dimen/_16sdp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/logo"
+        android:layout_marginTop="@dimen/_11sdp"
+        android:paddingTop="@dimen/_6sdp"
+        android:src="@drawable/ic_baseline_notes_24"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_6sdp"
+        android:text="Organizer"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/white"/>
+
+</LinearLayout>
