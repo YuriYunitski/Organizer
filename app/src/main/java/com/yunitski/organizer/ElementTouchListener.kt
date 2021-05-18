@@ -6,7 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class ElementTouchListener(private val context: Context, private val listener: OnItemClickListener): RecyclerView.OnItemTouchListener {
+class ElementTouchListener(context: Context, private val listener: OnItemClickListener): RecyclerView.OnItemTouchListener {
 
 
 
@@ -14,21 +14,19 @@ class ElementTouchListener(private val context: Context, private val listener: O
         fun onItemClick(view: View?, position: Int)
     }
 
-    var mGestureDetector: GestureDetector = GestureDetector(context, GestureDetector.SimpleOnGestureListener())
+    private var mGestureDetector: GestureDetector = GestureDetector(context, GestureDetector.SimpleOnGestureListener())
 
     override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
         val childView: View? = rv.findChildViewUnder(e.x, e.y)
         if (childView != null && mGestureDetector.onTouchEvent(e)){
-            listener.onItemClick(childView, rv.getChildAdapterPosition(childView));
+            listener.onItemClick(childView, rv.getChildAdapterPosition(childView))
         }
         return false
     }
 
     override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
-        TODO("Not yet implemented")
     }
 
     override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-        TODO("Not yet implemented")
     }
 }

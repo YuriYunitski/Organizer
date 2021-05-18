@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import java.util.*
 
 class NewNote : AppCompatActivity(), View.OnClickListener {
 
@@ -51,8 +52,7 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val id: Int? = v?.id
-        when (id) {
+        when (v?.id) {
             R.id.ib_back_n_save -> {
                 if (!isSaved) {
                     save()
@@ -63,11 +63,28 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
+    private fun dateC(): String{
+        val c: Calendar = GregorianCalendar()
+        val y = c[Calendar.YEAR]
+        val m = c[Calendar.MONTH] + 1
+        val d = c[Calendar.DAY_OF_MONTH]
+        return "$d.$m.$y"
+    }
+
+    private fun timeC(): String{
+        val c: Calendar = GregorianCalendar()
+        val h = c[Calendar.HOUR_OF_DAY]
+        val m = c[Calendar.MINUTE]
+        return "$h:$m"
+    }
     private fun save(){
         if (title.text.toString().isNotEmpty() || message.text.toString().isNotEmpty()) {
             val values = ContentValues()
             values.put(MyDBHandler.COLUMN_TITLE, title.text.toString())
             values.put(MyDBHandler.COLUMN_MESSAGE, message.text.toString())
+            values.put(MyDBHandler.COLUMN_DATE, dateC())
+            values.put(MyDBHandler.COLUMN_TIME, timeC())
             val db: SQLiteDatabase = myDBHandler.writableDatabase
             db.insert(MyDBHandler.TABLE_NOTES, null, values)
             db.close()

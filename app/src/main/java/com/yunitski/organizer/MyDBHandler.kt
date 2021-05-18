@@ -14,7 +14,7 @@ class MyDBHandler(context: Context, name: String?,
                 TABLE_NOTES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 COLUMN_TITLE
-                + " TEXT," + COLUMN_MESSAGE + " TEXT" + ")")
+                + " TEXT, " + COLUMN_MESSAGE + " TEXT, " + COLUMN_DATE + " TEXT, " + COLUMN_TIME + " TEXT" + ")")
         db.execSQL(createNotesTable)
     }
 
@@ -27,12 +27,14 @@ class MyDBHandler(context: Context, name: String?,
     }
     companion object {
 
-        private val DATABASE_VERSION = 1
-        private val DATABASE_NAME = "notesDB.db"
+        private const val DATABASE_VERSION = 1
+        private const val DATABASE_NAME = "notesDB.db"
         val TABLE_NOTES = "notes"
 
-        val COLUMN_ID = "_id"
-        val COLUMN_TITLE = "title"
-        val COLUMN_MESSAGE = "message"
+        const val COLUMN_ID = "_id"
+        const val COLUMN_TITLE = "title"
+        const val COLUMN_MESSAGE = "message"
+        const val COLUMN_DATE = "date"
+        const val COLUMN_TIME = "time"
     }
 }

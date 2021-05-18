@@ -12,7 +12,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,8 +26,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var toolBar: Toolbar? = null
     private var fab: FloatingActionButton? = null
     private lateinit var adapter: ElementAdapter
-    var posCont: Int = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +42,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
-        val bg: ConstraintLayout = findViewById(R.id.const_lay_main)
-
         fab = findViewById(R.id.floatingActionButton2)
         fab?.setOnClickListener(this)
         updateUi()
@@ -78,10 +73,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val db: SQLiteDatabase = myDBHandler.writableDatabase
         db.delete(MyDBHandler.TABLE_NOTES, MyDBHandler.COLUMN_ID + "=?", arrayOf(position.toString()))
         updateUi()
-//        val p: String = idList[position]
-//        deleteFromBase(p)
-//        idList.clear()
-//        updateUi()
         return super.onContextItemSelected(item)
     }
 
@@ -90,15 +81,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         updateUi()
     }
 
-//    override fun onRestart() {
-//        super.onRestart()
-//        updateUi()
-//    }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        updateUi()
-//    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val id: Int = item.itemId
@@ -113,15 +95,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onClick(v: View?) {
-        val id: Int? = v?.id
-        when(id){
+        when(v?.id){
             R.id.floatingActionButton2 ->{
                 newNote()
             }
         }
     }
 
-    fun newNote(){
+    private fun newNote(){
         startActivityForResult(Intent(this, NewNote::class.java), 1000)
     }
 
@@ -146,6 +127,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val idx1: Int = cursor.getColumnIndex(MyDBHandler.COLUMN_ID)
             val idx2: Int = cursor.getColumnIndex(MyDBHandler.COLUMN_TITLE)
             val idx3: Int = cursor.getColumnIndex(MyDBHandler.COLUMN_MESSAGE)
+            val idx4: Int = cursor.getColumnIndex(MyDBHandler.COLUMN_DATE)
+            val idx5: Int = cursor.getColumnIndex(MyDBHandler.COLUMN_TIME)
+
             if (cursor.getString(idx2).isEmpty()) {
                 idList.add(0, cursor.getString(idx1))
                 val s = cursor.getString(idx3)
@@ -153,33 +137,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 titleList.add(0, sp[0])
                 if (sp.size > 1) {
                     messageList.add(0, sp[1])
-                    elements.add(0, Element(sp[0], sp[1], cursor.getString(idx1)))
+                    elements.add(0, Element(sp[0], sp[1], cursor.getString(idx1), cursor.getString(idx4), cursor.getString(idx5)))
                 } else {
-                    elements.add(0, Element(sp[0], "", cursor.getString(idx1)))
+                    elements.add(0, Element(sp[0], "", cursor.getString(idx1), cursor.getString(idx4), cursor.getString(idx5)))
                 }
             } else {
                 idList.add(0, cursor.getString(idx1))
                 titleList.add(0, cursor.getString(idx2))
                 messageList.add(0, cursor.getString(idx3))
-                elements.add(0, Element(cursor.getString(idx2), cursor.getString(idx3), cursor.getString(idx1)))
+                elements.add(0, Element(cursor.getString(idx2), cursor.getString(idx3), cursor.getString(idx1), cursor.getString(idx4), cursor.getString(idx5)))
             }
         }
-
         db.close()
         cursor.close()
-
-
-            adapter = ElementAdapter(this, elements, this)
-
-
-
+        adapter = ElementAdapter(this, elements, this)
         recyclerView.adapter = adapter
         recyclerView.addOnItemTouchListener(
             ElementTouchListener(
                 applicationContext,
                 object : ElementTouchListener.OnItemClickListener {
                     override fun onItemClick(view: View?, position: Int) {
-                        //Place item click action here
                         Toast.makeText(
                             applicationContext,
                             "You clicked " + idList[position],
@@ -188,52 +165,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 })
         )
-//        recyclerView.setOnTouchListener(object : OnSwipeTouchListener(applicationContext) {
-//
-//            override fun onSwipeTop() {
-//                Toast.makeText(applicationContext, "top", Toast.LENGTH_SHORT).show()
-//
-//            }
-//
-//            override fun onSwipeRight() {
-//                Toast.makeText(applicationContext, "right", Toast.LENGTH_SHORT).show()
-//            }
-//
-//            override fun onSwipeLeft(){
-//                Toast.makeText(applicationContext, "left", Toast.LENGTH_SHORT).show()
-//                newNote()
-//            }
-//
-//            override fun onSwipeBottom() {
-//                Toast.makeText(applicationContext, "bottom", Toast.LENGTH_SHORT).show()
-//            }
-//        })
-//        adapter.onItemClick = { pos ->
-//            //val ap: Int = elements.indexOf(adapter.getItem(pos))
-//            val intent = Intent(this, EditNote::class.java)
-//            intent.putExtra("id", idList[pos])
-//            startActivity(intent)
-//        }
-    //        listView.adapter = adapter
-//        listView.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
-//            val actualPosition: Int = titleList.indexOf(adapter.getItem(position))
-//            Toast.makeText(this, "" + idList.get(actualPosition) + " " + titleList.get(actualPosition) + " " + messageList.get(actualPosition), Toast.LENGTH_SHORT).show()
-//        })
-//    }
-    }
-    private fun deleteFromBase(id: String){
-        val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
-        val db: SQLiteDatabase = myDBHandler.writableDatabase
-        db.delete(MyDBHandler.TABLE_NOTES, MyDBHandler.COLUMN_ID + "=?", arrayOf(id))
-        updateUi()
     }
 
     override fun onElementSelected(elts: Element?) {
-        posCont = elts?.id?.toInt()!!
         val intent = Intent(this, EditNote::class.java)
-        intent.putExtra("id", elts.id)
+        intent.putExtra("id", elts?.id)
         startActivity(intent)
-//        Toast.makeText(applicationContext, "" + elts?.id, Toast.LENGTH_LONG).show();
     }
-
 }

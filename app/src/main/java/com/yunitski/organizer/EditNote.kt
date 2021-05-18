@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
+import java.util.*
 
 class EditNote : AppCompatActivity(), View.OnClickListener {
 
@@ -72,12 +73,28 @@ class EditNote : AppCompatActivity(), View.OnClickListener {
             isSaved = true
         }
     }
+    private fun dateC(): String{
+        val c: Calendar = GregorianCalendar()
+        val y = c[Calendar.YEAR]
+        val m = c[Calendar.MONTH] + 1
+        val d = c[Calendar.DAY_OF_MONTH]
+        return "$d.$m.$y"
+    }
+    private fun timeC(): String{
+        val c: Calendar = GregorianCalendar()
+        val h = c[Calendar.HOUR_OF_DAY]
+        val m = c[Calendar.MINUTE]
+        return "$h:$m"
+    }
     private fun save(){
-        val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1 )
-        val db: SQLiteDatabase = myDBHandler.writableDatabase
-        val strSQL = "UPDATE ${MyDBHandler.TABLE_NOTES} SET ${MyDBHandler.COLUMN_TITLE} = '${title.text}', ${MyDBHandler.COLUMN_MESSAGE} = '${message.text}' WHERE ${MyDBHandler.COLUMN_ID} = $id;"
-        db.execSQL(strSQL)
-        db.close()
+        if ((ttl != title.text.toString() || msg != message.text.toString()) && (title.text.toString().isNotEmpty() || message.text.toString().isNotEmpty())) {
+            val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
+            val db: SQLiteDatabase = myDBHandler.writableDatabase
+            val strSQL =
+                "UPDATE ${MyDBHandler.TABLE_NOTES} SET ${MyDBHandler.COLUMN_TITLE} = '${title.text}', ${MyDBHandler.COLUMN_MESSAGE} = '${message.text}', ${MyDBHandler.COLUMN_DATE} = '${dateC()}', ${MyDBHandler.COLUMN_TIME} = '${timeC()}' WHERE ${MyDBHandler.COLUMN_ID} = $id;"
+            db.execSQL(strSQL)
+            db.close()
+        }
     }
     private fun showKb(){
         val imm: InputMethodManager =
