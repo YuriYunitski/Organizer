@@ -9,5 +9,9 @@
         android:title="Настройки"
         android:icon="@drawable/ic_baseline_settings_24"
         android:id="@+id/settings"/>
+    <item
+        android:title="Архив"
+        android:icon="@drawable/ic_baseline_turned_in_not_24"
+        android:id="@+id/archive"/>
 
 </menu>

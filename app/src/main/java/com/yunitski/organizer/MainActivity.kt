@@ -88,6 +88,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(Intent(this, RemindActivity::class.java))
         } else if(id == R.id.settings){
             startActivity(Intent(this, Settings::class.java))
+        } else if(id == R.id.archive){
+            startActivity(Intent(this, Archive::class.java))
         }
         val drawerLayout = findViewById<View>(R.id.drawer_layout) as DrawerLayout
         drawerLayout.closeDrawer(GravityCompat.START)

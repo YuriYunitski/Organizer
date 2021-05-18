@@ -51,6 +51,16 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (!isSaved) {
+            save()
+            isSaved = true
+        }
+        hideKb()
+        finish()
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.ib_back_n_save -> {
