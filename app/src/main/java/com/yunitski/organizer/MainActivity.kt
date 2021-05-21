@@ -1,5 +1,6 @@
 package com.yunitski.organizer
 
+import android.content.ContentValues
 import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
@@ -71,7 +72,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val position: Int = adapter.getPosition()
         val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
         val db: SQLiteDatabase = myDBHandler.writableDatabase
+        val myDBHandlerArchive = MyDBHandlerArchive(this, "notesDBarchive.db", null, 1)
+        val aDb: SQLiteDatabase = myDBHandlerArchive.writableDatabase
+        var tit = ""
+        var ms = ""
+        var dt = ""
+        var tm = ""
+        var id = ""
+        val c: Cursor = db.rawQuery("SELECT ${MyDBHandler.COLUMN_TITLE}, ${MyDBHandler.COLUMN_MESSAGE}, ${MyDBHandler.COLUMN_DATE}, ${MyDBHandler.COLUMN_TIME} FROM ${MyDBHandler.TABLE_NOTES} WHERE ${MyDBHandler.COLUMN_ID} = '$position'", null)
+        while (c.moveToNext()){
+            tit = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_TITLE))
+            ms = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_MESSAGE))
+            dt = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_DATE))
+            tm = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_TIME))
+            id = position.toString()
+        }
+        c.close()
+        val cv = ContentValues();
+        cv.put(MyDBHandlerArchive.COLUMN_TITLE, tit)
+        cv.put(MyDBHandlerArchive.COLUMN_MESSAGE, ms)
+        cv.put(MyDBHandlerArchive.COLUMN_DATE, dt)
+        cv.put(MyDBHandlerArchive.COLUMN_TIME, tm)
+        cv.put(MyDBHandlerArchive.COLUMN_ID, id)
+        aDb.insert(MyDBHandlerArchive.TABLE_NOTES, null, cv)
         db.delete(MyDBHandler.TABLE_NOTES, MyDBHandler.COLUMN_ID + "=?", arrayOf(position.toString()))
+        aDb.close()
+        db.close()
         updateUi()
         return super.onContextItemSelected(item)
     }

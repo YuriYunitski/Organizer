@@ -28,7 +28,7 @@ class MyDBHandlerArchive(context: Context, name: String?,
     companion object {
 
         private const val DATABASE_VERSION = 1
-        private const val DATABASE_NAME = "notesDB.db"
+        private const val DATABASE_NAME = "notesDBarchive.db"
         val TABLE_NOTES = "notes"
 
         const val COLUMN_ID = "_id"

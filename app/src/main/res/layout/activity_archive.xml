@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Archive">
+    tools:context=".Archive"
+    android:background="#F1F1F1">
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -46,6 +47,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:backgroundTint="@color/gray_blue_500"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_archive"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="#F1F1F1"
+        app:layout_constraintBottom_toTopOf="@+id/delete_all"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout1" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
