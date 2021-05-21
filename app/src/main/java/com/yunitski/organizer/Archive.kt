@@ -1,15 +1,18 @@
 package com.yunitski.organizer
 
 import android.content.ContentValues
+import android.content.DialogInterface
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -104,6 +107,7 @@ class Archive : AppCompatActivity(), ElementAdapterArchive.ElementAdapterListene
                 } while (cursor.moveToNext())
             }
         }
+
         cursor.close()
         db.close()
         adapter = ElementAdapterArchive(this, elements, this)
@@ -137,9 +141,24 @@ class Archive : AppCompatActivity(), ElementAdapterArchive.ElementAdapterListene
     }
 
     override fun onClick(v: View?) {
-        val dbHandlerArchice = MyDBHandlerArchive(this, "notesDBarchive.db", null, 1)
-        val db: SQLiteDatabase = dbHandlerArchice.writableDatabase
-        db.delete(MyDBHandlerArchive.TABLE_NOTES, null, null)
-        updUI()
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setTitle("Удалить все заметки?")
+        builder.setPositiveButton("ok", object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                val dbHandlerArchice = MyDBHandlerArchive(applicationContext, "notesDBarchive.db", null, 1)
+                val db: SQLiteDatabase = dbHandlerArchice.writableDatabase
+                db.delete(MyDBHandlerArchive.TABLE_NOTES, null, null)
+                updUI()
+            }
+
+        })
+        builder.setNegativeButton("cancel", object : DialogInterface.OnClickListener{
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+            }
+        })
+        val dialog = builder.create()
+        dialog.show()
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.parseColor("#1F2B39")))
     }
 }
