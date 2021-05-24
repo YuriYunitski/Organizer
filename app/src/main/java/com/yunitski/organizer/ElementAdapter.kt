@@ -1,25 +1,55 @@
 package com.yunitski.organizer
 
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.view.ContextMenu
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.view.*
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.RecyclerView
 
 
 class ElementAdapter(private val context: Context, private val list: MutableList<Element>, private val listen: ElementAdapterListener): RecyclerView.Adapter<ElementAdapter.MyViewHolder>(), Filterable {
 
     var filteredElementList: MutableList<Element> = mutableListOf()
+    var selectedElementList: MutableList<Element> = mutableListOf()
+    private var multiSelect: Boolean = false
     init {
-        filteredElementList.addAll(list)
+//        filteredElementList.addAll(list)
+        for (i in list){
+            filteredElementList.add(i)
+        }
+    }
+    private var actionModeCallbacks: ActionMode.Callback = object : ActionMode.Callback{
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            multiSelect = true
+            menu?.add("Delete")
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false;
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            for (i in selectedElementList){
+                val myDBHandler: MyDBHandler = MyDBHandler(context, "notesDB.db", null, 1)
+                val db: SQLiteDatabase = myDBHandler.writableDatabase
+                db.delete(MyDBHandler.TABLE_NOTES, MyDBHandler.COLUMN_ID + " = " + i.id, null)
+                db.close()
+                filteredElementList.remove(i)
+            }
+            mode?.finish()
+            return true
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            multiSelect = false
+            selectedElementList.clear()
+            notifyDataSetChanged()
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ElementAdapter.MyViewHolder {
@@ -29,52 +59,97 @@ class ElementAdapter(private val context: Context, private val list: MutableList
     }
 
     override fun onBindViewHolder(holder: ElementAdapter.MyViewHolder, position: Int) {
-        val element: Element = filteredElementList[position]
-        holder.titleV.text = element.title
-        holder.messV.text = element.message
-        holder.idItem.text = element.id
-        holder.dateV.text = element.date
-        holder.timeV.text = element.time
-        holder.linL.setOnLongClickListener {
-            setPosition(element.id.toInt())
-            false
-        }
+//        val element: Element = filteredElementList[position]
+//        holder.titleV.text = element.title
+//        holder.messV.text = element.message
+//        holder.idItem.text = element.id
+//        holder.dateV.text = element.date
+//        holder.timeV.text = element.time
+////        holder.linL.setOnLongClickListener {
+////            setPosition(element.id.toInt())
+////            false
+////        }
+//        if(selectedElementList.contains(element)){
+//            holder.frame.setBackgroundColor(Color.LTGRAY);
+//        } else {
+//            holder.frame.setBackgroundColor(Color.WHITE)
+//        }
+        holder.update(filteredElementList[position])
+//                val element: Element = filteredElementList[position]
+//                holder.linL.setOnLongClickListener {
+//            setPosition(element.id.toInt())
+//            false
+//        }
     }
+
 
 
 
     override fun getItemCount() = filteredElementList.size
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnCreateContextMenuListener {
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleV: TextView = itemView.findViewById(R.id.title_item)
         val messV: TextView = itemView.findViewById(R.id.mess_item)
         val idItem: TextView = itemView.findViewById(R.id.id_item)
         val linL: LinearLayout = itemView.findViewById(R.id.items_list)
         val dateV: TextView = itemView.findViewById(R.id.date_item)
         val timeV: TextView = itemView.findViewById(R.id.time_item)
+        val frame: FrameLayout = itemView.findViewById(R.id.frameLayout)
 
-        init {
-            itemView.setOnClickListener{
-                listen.onElementSelected(filteredElementList[adapterPosition])
+            //itemView.setOnCreateContextMenuListener(this)
+            fun selectItem(i: Element){
+                if (multiSelect){
+                    if (selectedElementList.contains(i)){
+                        selectedElementList.remove(i)
+                        frame.setBackgroundColor(Color.WHITE)
+                    } else {
+                        selectedElementList.add(i)
+                        frame.setBackgroundColor(Color.LTGRAY);
+                    }
+                }
             }
-            itemView.setOnCreateContextMenuListener(this)
+
+            fun update(el: Element){
+                titleV.text = el.title
+                messV.text = el.message
+                idItem.text = el.id
+                dateV.text = el.date
+                timeV.text = el.time
+                if(selectedElementList.contains(el)){
+                    frame.setBackgroundColor(Color.LTGRAY);
+                } else {
+                    frame.setBackgroundColor(Color.WHITE)
+                }
+                itemView.setOnLongClickListener(object : View.OnLongClickListener{
+                    override fun onLongClick(v: View?): Boolean {
+                        (v?.context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
+                        selectItem(el)
+                        return true
+                    }
+
+                })
+                itemView.setOnClickListener(object : View.OnClickListener{
+                    override fun onClick(v: View?) {
+                        listen.onElementSelected(filteredElementList[adapterPosition])
+                    }
+
+                })
+            }
         }
 
-        override fun onCreateContextMenu(
-            menu: ContextMenu?,
-            v: View?,
-            menuInfo: ContextMenu.ContextMenuInfo?
-        ) {
-            menu!!.add(0, 1, adapterPosition, "action 1")
-            //установка бэкграунда контекстного меню
-            val positionOfMenuItem = 0
-            val item = menu.getItem(positionOfMenuItem)
-            val s = SpannableString("Удалить")
-            s.setSpan(ForegroundColorSpan(Color.BLACK), 0, s.length, 0)
-            item.title = s
-        }
-    }
+//        override fun onCreateContextMenu(
+//            menu: ContextMenu?,
+//            v: View?,
+//            menuInfo: ContextMenu.ContextMenuInfo?
+//        ) {
+//            menu!!.add(0, 1, adapterPosition, "action 1")
+//            //установка бэкграунда контекстного меню
+//            val positionOfMenuItem = 0
+//            val item = menu.getItem(positionOfMenuItem)
+//            val s = SpannableString("Удалить")
+//            s.setSpan(ForegroundColorSpan(Color.BLACK), 0, s.length, 0)
+//            item.title = s
+//        }
 
         interface ElementAdapterListener {
         fun onElementSelected(elts: Element?)
@@ -128,8 +203,8 @@ class ElementAdapter(private val context: Context, private val list: MutableList
         }
     }
 
-    override fun onViewRecycled(holder: MyViewHolder) {
-        holder.itemView.setOnLongClickListener(null)
-        super.onViewRecycled(holder)
-    }
+//    override fun onViewRecycled(holder: MyViewHolder) {
+//        holder.itemView.setOnLongClickListener(null)
+//        super.onViewRecycled(holder)
+//    }
 }
