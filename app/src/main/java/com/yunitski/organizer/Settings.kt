@@ -1,5 +1,6 @@
 package com.yunitski.organizer
 
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 
 class Settings : AppCompatActivity(), View.OnClickListener {
 
@@ -31,11 +34,11 @@ class Settings : AppCompatActivity(), View.OnClickListener {
         sharedPreferences = getSharedPreferences(MainActivity.LAYOUT_FILE, Context.MODE_PRIVATE)
         layout = sharedPreferences.getString(MainActivity.LAYOUT_KEY, MainActivity.ONE_COLUMN_LAYOUT)
         if (layout == MainActivity.ONE_COLUMN_LAYOUT){
-            listBtn.setBackground(resources.getDrawable(R.drawable.back_gray))
-            columnBtn.setBackground(resources.getDrawable(R.drawable.back_white))
+            listBtn.background = ContextCompat.getDrawable(applicationContext, R.drawable.back_gray)
+            columnBtn.background = ContextCompat.getDrawable(applicationContext, R.drawable.back_white)
         } else {
-            columnBtn.setBackground(resources.getDrawable(R.drawable.back_gray))
-            listBtn.setBackground(resources.getDrawable(R.drawable.back_white))
+            columnBtn.background = ContextCompat.getDrawable(applicationContext, R.drawable.back_gray)
+            listBtn.background = ContextCompat.getDrawable(applicationContext, R.drawable.back_white)
         }
     }
 
@@ -50,15 +53,15 @@ class Settings : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         if (v?.id == R.id.list_set){
-            listBtn.setBackground(resources.getDrawable(R.drawable.back_gray))
-            columnBtn.setBackground(resources.getDrawable(R.drawable.back_white))
+            listBtn.background = ContextCompat.getDrawable(applicationContext, R.drawable.back_gray)
+            columnBtn.background = ContextCompat.getDrawable(applicationContext, R.drawable.back_white)
             sharedPreferences = getSharedPreferences(MainActivity.LAYOUT_FILE, Context.MODE_PRIVATE)
             val editor: SharedPreferences.Editor = sharedPreferences.edit()
             editor.putString(MainActivity.LAYOUT_KEY, MainActivity.ONE_COLUMN_LAYOUT)
             editor.apply()
         } else if (v?.id == R.id.column_set){
-            columnBtn.setBackground(resources.getDrawable(R.drawable.back_gray))
-            listBtn.setBackground(resources.getDrawable(R.drawable.back_white))
+            columnBtn.background = ContextCompat.getDrawable(applicationContext, R.drawable.back_gray)
+            listBtn.background = ContextCompat.getDrawable(applicationContext, R.drawable.back_white)
             sharedPreferences = getSharedPreferences(MainActivity.LAYOUT_FILE, Context.MODE_PRIVATE)
             val editor: SharedPreferences.Editor = sharedPreferences.edit()
             editor.putString(MainActivity.LAYOUT_KEY, MainActivity.TWO_COLUMN_LAYOUT)

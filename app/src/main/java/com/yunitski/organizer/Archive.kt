@@ -26,7 +26,7 @@ class Archive : AppCompatActivity(), ElementAdapterArchive.ElementAdapterListene
         setContentView(R.layout.activity_archive)
         val toolBar: Toolbar = findViewById(R.id.tool_bar)
         setSupportActionBar(toolBar)
-        title = "Архив"
+        title = "Корзина"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
         deleteBtn = findViewById(R.id.delete_all)

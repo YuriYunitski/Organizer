@@ -1,13 +1,18 @@
 package com.yunitski.organizer
 
+import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.view.*
 import android.widget.*
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.appcompat.view.SupportActionModeWrapper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 
 
 class ElementAdapter(private val context: Context, private val list: MutableList<Element>, private val listen: ElementAdapterListener): RecyclerView.Adapter<ElementAdapter.MyViewHolder>(), Filterable {
@@ -29,15 +34,44 @@ class ElementAdapter(private val context: Context, private val list: MutableList
         }
 
         override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            return false;
+            return false
         }
 
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
             for (i in selectedElementList){
-                val myDBHandler: MyDBHandler = MyDBHandler(context, "notesDB.db", null, 1)
-                val db: SQLiteDatabase = myDBHandler.writableDatabase
-                db.delete(MyDBHandler.TABLE_NOTES, MyDBHandler.COLUMN_ID + " = " + i.id, null)
-                db.close()
+//                val myDBHandler: MyDBHandler = MyDBHandler(context, "notesDB.db", null, 1)
+//                val db: SQLiteDatabase = myDBHandler.writableDatabase
+//                db.delete(MyDBHandler.TABLE_NOTES, MyDBHandler.COLUMN_ID + " = " + i.id, null)
+//                db.close()
+                //        val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
+        val myDBHandler: MyDBHandler = MyDBHandler(context, "notesDB.db", null, 1)
+        val db: SQLiteDatabase = myDBHandler.writableDatabase
+        val myDBHandlerArchive = MyDBHandlerArchive(context, "notesDBarchive.db", null, 1)
+        val aDb: SQLiteDatabase = myDBHandlerArchive.writableDatabase
+        var tit = ""
+        var ms = ""
+        var dt = ""
+        var tm = ""
+        var id = ""
+        val c: Cursor = db.rawQuery("SELECT ${MyDBHandler.COLUMN_TITLE}, ${MyDBHandler.COLUMN_MESSAGE}, ${MyDBHandler.COLUMN_DATE}, ${MyDBHandler.COLUMN_TIME} FROM ${MyDBHandler.TABLE_NOTES} WHERE ${MyDBHandler.COLUMN_ID} = '${i.id}'", null)
+        while (c.moveToNext()){
+            tit = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_TITLE))
+            ms = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_MESSAGE))
+            dt = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_DATE))
+            tm = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_TIME))
+            id = i.id
+        }
+        c.close()
+        val cv = ContentValues();
+        cv.put(MyDBHandlerArchive.COLUMN_TITLE, tit)
+        cv.put(MyDBHandlerArchive.COLUMN_MESSAGE, ms)
+        cv.put(MyDBHandlerArchive.COLUMN_DATE, dt)
+        cv.put(MyDBHandlerArchive.COLUMN_TIME, tm)
+        cv.put(MyDBHandlerArchive.COLUMN_ID, id)
+        aDb.insert(MyDBHandlerArchive.TABLE_NOTES, null, cv)
+        db.delete(MyDBHandler.TABLE_NOTES, MyDBHandler.COLUMN_ID + "=?", arrayOf(i.id))
+        aDb.close()
+        db.close()
                 filteredElementList.remove(i)
             }
             mode?.finish()
@@ -120,20 +154,18 @@ class ElementAdapter(private val context: Context, private val list: MutableList
                 } else {
                     frame.setBackgroundColor(Color.WHITE)
                 }
-                itemView.setOnLongClickListener(object : View.OnLongClickListener{
-                    override fun onLongClick(v: View?): Boolean {
-                        (v?.context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
-                        selectItem(el)
-                        return true
-                    }
-
-                })
-                itemView.setOnClickListener(object : View.OnClickListener{
-                    override fun onClick(v: View?) {
+                itemView.setOnLongClickListener { v ->
+                    (v?.context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
+                    selectItem(el)
+                    true
+                }
+                itemView.setOnClickListener {
+                    if (multiSelect) {
+                        selectItem(el);
+                    } else {
                         listen.onElementSelected(filteredElementList[adapterPosition])
                     }
-
-                })
+                }
             }
         }
 

@@ -1,6 +1,5 @@
 package com.yunitski.organizer
 
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -31,12 +30,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var fab: FloatingActionButton? = null
     private lateinit var adapter: ElementAdapter
     private lateinit var adapterTwo: ElementAdapter
-    lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
     var layout: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences = getSharedPreferences(Companion.LAYOUT_FILE, Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(LAYOUT_FILE, Context.MODE_PRIVATE)
         layout = sharedPreferences.getString(LAYOUT_KEY, ONE_COLUMN_LAYOUT)
         if (layout == ONE_COLUMN_LAYOUT) {
             setContentView(R.layout.activity_main)
@@ -145,7 +144,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResume() {
         super.onResume()
-        sharedPreferences = getSharedPreferences(Companion.LAYOUT_FILE, Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(LAYOUT_FILE, Context.MODE_PRIVATE)
         layout = sharedPreferences.getString(LAYOUT_KEY, ONE_COLUMN_LAYOUT)
         if (layout == ONE_COLUMN_LAYOUT) {
             setContentView(R.layout.activity_main)
@@ -300,7 +299,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onElementSelected(elts: Element?) {
-        Toast.makeText(this, "c", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, EditNote::class.java)
         intent.putExtra("id", elts?.id)
         startActivity(intent)
