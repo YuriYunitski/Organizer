@@ -9,9 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher11_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Organizer.NoActionBar">
-        <activity android:name=".Archive"></activity>
+        <activity android:name=".reminer.ReminderTime"></activity>
+        <activity android:name=".reminer.NewReminder" />
+        <activity android:name=".Archive" />
         <activity android:name=".Settings" />
-        <activity android:name=".RemindActivity" />
+        <activity android:name=".reminer.RemindActivity" />
         <activity android:name=".EditNote" />
         <activity android:name=".NewNote" />
         <activity android:name=".MainActivity">

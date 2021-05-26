@@ -1,6 +1,5 @@
 package com.yunitski.organizer
 
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
@@ -10,13 +9,12 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 
 class Settings : AppCompatActivity(), View.OnClickListener {
 
-    lateinit var listBtn: TextView
-    lateinit var columnBtn: TextView
-    lateinit var sharedPreferences: SharedPreferences
+    private lateinit var listBtn: TextView
+    private lateinit var columnBtn: TextView
+    private lateinit var sharedPreferences: SharedPreferences
     var layout: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

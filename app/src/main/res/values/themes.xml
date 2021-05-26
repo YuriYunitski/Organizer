@@ -18,6 +18,8 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:textColorHint">@android:color/white</item>
         <item name="android:editTextColor">@android:color/white</item>
+        <item name="windowActionModeOverlay">true</item>
+
     </style>
 
     <style name="Theme.Organizer.NoActionBar">

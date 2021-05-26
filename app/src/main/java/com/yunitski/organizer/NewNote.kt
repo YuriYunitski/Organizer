@@ -18,7 +18,7 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var message: EditText
     private var backNSave: ImageButton? = null
-    private lateinit var myDBHandler: MyDBHandler
+    private lateinit var myDBHandler: DataBase
     private var isSaved: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +30,7 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
         showKb()
         backNSave = findViewById(R.id.ib_back_n_save)
         backNSave?.setOnClickListener(this)
-        myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
+        myDBHandler = DataBase(this, "notesDB.db", null, 1)
 
     }
 
@@ -91,12 +91,12 @@ class NewNote : AppCompatActivity(), View.OnClickListener {
     private fun save(){
         if (title.text.toString().isNotEmpty() || message.text.toString().isNotEmpty()) {
             val values = ContentValues()
-            values.put(MyDBHandler.COLUMN_TITLE, title.text.toString())
-            values.put(MyDBHandler.COLUMN_MESSAGE, message.text.toString())
-            values.put(MyDBHandler.COLUMN_DATE, dateC())
-            values.put(MyDBHandler.COLUMN_TIME, timeC())
+            values.put(DataBase.COLUMN_TITLE, title.text.toString())
+            values.put(DataBase.COLUMN_MESSAGE, message.text.toString())
+            values.put(DataBase.COLUMN_DATE, dateC())
+            values.put(DataBase.COLUMN_TIME, timeC())
             val db: SQLiteDatabase = myDBHandler.writableDatabase
-            db.insert(MyDBHandler.TABLE_NOTES, null, values)
+            db.insert(DataBase.TABLE_NOTES, null, values)
             db.close()
             val intent = Intent()
             setResult(1000, intent)

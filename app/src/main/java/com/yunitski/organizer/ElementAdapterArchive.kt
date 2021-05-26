@@ -14,7 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ElementAdapterArchive(private val context: Context, private val list: MutableList<Element>, private val listen: ElementAdapterListener): RecyclerView.Adapter<ElementAdapterArchive.MyViewHolder>(),
+class ElementAdapterArchive(private val context: Context, private val list: MutableList<Element>, private val listen: ElementAdapterListenerArchive): RecyclerView.Adapter<ElementAdapterArchive.MyViewHolder>(),
     Filterable {
 
     var filteredElementList: MutableList<Element> = mutableListOf()
@@ -76,7 +76,7 @@ class ElementAdapterArchive(private val context: Context, private val list: Muta
         }
     }
 
-    interface ElementAdapterListener {
+    interface ElementAdapterListenerArchive {
         fun onElementSelected(elts: Element?)
     }
 

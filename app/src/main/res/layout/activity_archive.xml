@@ -46,7 +46,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/gray_blue_500"/>
+        android:backgroundTint="#58748A"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_archive"

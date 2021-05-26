@@ -30,9 +30,9 @@ class EditNote : AppCompatActivity(), View.OnClickListener {
         message = findViewById(R.id.et_message)
         message.requestFocus()
         id = intent.getStringExtra("id")
-        val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
+        val myDBHandler = DataBase(this, "notesDB.db", null, 1)
         val db: SQLiteDatabase = myDBHandler.readableDatabase
-        val strSQL = "SELECT ${MyDBHandler.COLUMN_TITLE}, ${MyDBHandler.COLUMN_MESSAGE} FROM ${MyDBHandler.TABLE_NOTES} WHERE ${MyDBHandler.COLUMN_ID} = $id"
+        val strSQL = "SELECT ${DataBase.COLUMN_TITLE}, ${DataBase.COLUMN_MESSAGE} FROM ${DataBase.TABLE_NOTES} WHERE ${DataBase.COLUMN_ID} = $id"
         val cursor: Cursor = db.rawQuery(strSQL, null)
         while (cursor.moveToNext()){
             ttl = cursor.getString(0)
@@ -88,10 +88,10 @@ class EditNote : AppCompatActivity(), View.OnClickListener {
     }
     private fun save(){
         if ((ttl != title.text.toString() || msg != message.text.toString()) && (title.text.toString().isNotEmpty() || message.text.toString().isNotEmpty())) {
-            val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
+            val myDBHandler = DataBase(this, "notesDB.db", null, 1)
             val db: SQLiteDatabase = myDBHandler.writableDatabase
             val strSQL =
-                "UPDATE ${MyDBHandler.TABLE_NOTES} SET ${MyDBHandler.COLUMN_TITLE} = '${title.text}', ${MyDBHandler.COLUMN_MESSAGE} = '${message.text}', ${MyDBHandler.COLUMN_DATE} = '${dateC()}', ${MyDBHandler.COLUMN_TIME} = '${timeC()}' WHERE ${MyDBHandler.COLUMN_ID} = $id;"
+                "UPDATE ${DataBase.TABLE_NOTES} SET ${DataBase.COLUMN_TITLE} = '${title.text}', ${DataBase.COLUMN_MESSAGE} = '${message.text}', ${DataBase.COLUMN_DATE} = '${dateC()}', ${DataBase.COLUMN_TIME} = '${timeC()}' WHERE ${DataBase.COLUMN_ID} = $id;"
             db.execSQL(strSQL)
             db.close()
         }

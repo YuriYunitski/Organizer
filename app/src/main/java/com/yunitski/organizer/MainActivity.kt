@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.yunitski.organizer.reminer.RemindActivity
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -101,46 +102,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-//    override fun onContextItemSelected(item: MenuItem): Boolean {
-//        var position = 0
-//        if (layout == ONE_COLUMN_LAYOUT){
-//            position = adapter.getPosition()
-//        } else {
-//            position = adapterTwo.getPosition()
-//        }
-//        val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
-//        val db: SQLiteDatabase = myDBHandler.writableDatabase
-//        val myDBHandlerArchive = MyDBHandlerArchive(this, "notesDBarchive.db", null, 1)
-//        val aDb: SQLiteDatabase = myDBHandlerArchive.writableDatabase
-//        var tit = ""
-//        var ms = ""
-//        var dt = ""
-//        var tm = ""
-//        var id = ""
-//        val c: Cursor = db.rawQuery("SELECT ${MyDBHandler.COLUMN_TITLE}, ${MyDBHandler.COLUMN_MESSAGE}, ${MyDBHandler.COLUMN_DATE}, ${MyDBHandler.COLUMN_TIME} FROM ${MyDBHandler.TABLE_NOTES} WHERE ${MyDBHandler.COLUMN_ID} = '$position'", null)
-//        while (c.moveToNext()){
-//            tit = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_TITLE))
-//            ms = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_MESSAGE))
-//            dt = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_DATE))
-//            tm = c.getString(c.getColumnIndex(MyDBHandler.COLUMN_TIME))
-//            id = position.toString()
-//        }
-//        c.close()
-//        val cv = ContentValues();
-//        cv.put(MyDBHandlerArchive.COLUMN_TITLE, tit)
-//        cv.put(MyDBHandlerArchive.COLUMN_MESSAGE, ms)
-//        cv.put(MyDBHandlerArchive.COLUMN_DATE, dt)
-//        cv.put(MyDBHandlerArchive.COLUMN_TIME, tm)
-//        cv.put(MyDBHandlerArchive.COLUMN_ID, id)
-//        aDb.insert(MyDBHandlerArchive.TABLE_NOTES, null, cv)
-//        db.delete(MyDBHandler.TABLE_NOTES, MyDBHandler.COLUMN_ID + "=?", arrayOf(position.toString()))
-//        aDb.close()
-//        db.close()
-//
-//
-//        updateUi()
-//        return super.onContextItemSelected(item)
-//    }
 
     override fun onResume() {
         super.onResume()
@@ -185,9 +146,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val id: Int = item.itemId
-//        if (id == R.id.remind){
-//            startActivity(Intent(this, RemindActivity::class.java))
-//        } else
+        if (id == R.id.remind){
+            startActivity(Intent(this, RemindActivity::class.java))
+        } else
             if(id == R.id.settings){
             startActivity(Intent(this, Settings::class.java))
         } else if(id == R.id.archive){
@@ -227,15 +188,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val titleList: MutableList<String> = mutableListOf()
         val idList: MutableList<String> = mutableListOf()
         val elements: MutableList<Element> = mutableListOf()
-        val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
+        val myDBHandler = DataBase(this, "notesDB.db", null, 1)
         val db: SQLiteDatabase = myDBHandler.readableDatabase
-        val cursor: Cursor = db.rawQuery("SELECT * FROM " + MyDBHandler.TABLE_NOTES + ";", null)
+        val cursor: Cursor = db.rawQuery("SELECT * FROM " + DataBase.TABLE_NOTES + ";", null)
         while (cursor.moveToNext()) {
-            val idx1: Int = cursor.getColumnIndex(MyDBHandler.COLUMN_ID)
-            val idx2: Int = cursor.getColumnIndex(MyDBHandler.COLUMN_TITLE)
-            val idx3: Int = cursor.getColumnIndex(MyDBHandler.COLUMN_MESSAGE)
-            val idx4: Int = cursor.getColumnIndex(MyDBHandler.COLUMN_DATE)
-            val idx5: Int = cursor.getColumnIndex(MyDBHandler.COLUMN_TIME)
+            val idx1: Int = cursor.getColumnIndex(DataBase.COLUMN_ID)
+            val idx2: Int = cursor.getColumnIndex(DataBase.COLUMN_TITLE)
+            val idx3: Int = cursor.getColumnIndex(DataBase.COLUMN_MESSAGE)
+            val idx4: Int = cursor.getColumnIndex(DataBase.COLUMN_DATE)
+            val idx5: Int = cursor.getColumnIndex(DataBase.COLUMN_TIME)
 
             if (cursor.getString(idx2).isEmpty()) {
                 idList.add(0, cursor.getString(idx1))
