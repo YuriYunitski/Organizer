@@ -1,4 +1,4 @@
-package com.yunitski.organizer.reminer
+package com.yunitski.organizer.reminder
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

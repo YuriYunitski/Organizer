@@ -28,7 +28,7 @@ class DataBase (context: Context, name: String?,
                 TABLE_REMINDS + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_TITLE
-                + " TEXT, " + COLUMN_MESSAGE + " TEXT, " + COLUMN_DATE + " TEXT, " + COLUMN_TIME + " TEXT" + ")")
+                + " TEXT, " + COLUMN_MESSAGE + " TEXT, " + COLUMN_DATE + " TEXT, " + COLUMN_TIME + " TEXT, " + COLUMN_DATE_CHOSEN + " TEXT, " + COLUMN_TIME_CHOSEN + " TEXT" + ")")
         db?.execSQL(createRemindTable)
     }
 
@@ -53,5 +53,7 @@ class DataBase (context: Context, name: String?,
         const val COLUMN_MESSAGE = "message"
         const val COLUMN_DATE = "date"
         const val COLUMN_TIME = "time"
+        const val COLUMN_DATE_CHOSEN = "dateChosen"
+        const val COLUMN_TIME_CHOSEN = "timeChosen"
     }
 }
