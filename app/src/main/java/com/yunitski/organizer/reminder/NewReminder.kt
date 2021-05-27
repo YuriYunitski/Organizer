@@ -21,6 +21,7 @@ class NewReminder : AppCompatActivity(), View.OnClickListener {
     lateinit var rDesc: EditText
     var isKB: Boolean = false
     private val c: Calendar = GregorianCalendar()
+    var chosenDate: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +35,8 @@ class NewReminder : AppCompatActivity(), View.OnClickListener {
         rName.requestFocus()
         isKB = true
         showKb()
+        val i = intent
+        chosenDate = i.getStringExtra("chosenDate").toString()
     }
 
     override fun onClick(v: View?) {
@@ -46,6 +49,7 @@ class NewReminder : AppCompatActivity(), View.OnClickListener {
             i.putExtra("desc", rDesc.text.toString())
             i.putExtra("date", getCurrentDate())
             i.putExtra("time", getCurrentTime())
+            i.putExtra("chosenDate", chosenDate)
             startActivityForResult(i, 17)
             if (isKB) {
                 hideKb()
@@ -88,8 +92,24 @@ class NewReminder : AppCompatActivity(), View.OnClickListener {
         isKB = false
     }
 
-    private fun getCurrentDate() = "${c.get(Calendar.DAY_OF_MONTH)}.${c.get(Calendar.MONTH) + 1}.${c.get(
-        Calendar.YEAR)}"
+    private fun getCurrentDate(): String{
+        val c: Calendar = GregorianCalendar()
+        val y = c[Calendar.YEAR]
+        val m = c[Calendar.MONTH] + 1
+        val d = c[Calendar.DAY_OF_MONTH]
+        var mm: String = m.toString()
+        if (m < 10){
+            mm = "0$m"
+        }
+        return "$d.$mm.$y"
+    }
 
-    private fun getCurrentTime() = "${c.get(Calendar.HOUR_OF_DAY)}:${c.get(Calendar.MINUTE)}"
+    private fun getCurrentTime(): String{
+        val m = c.get(Calendar.MINUTE)
+        var mm: String = m.toString()
+        if (m < 10){
+            mm = "0$m"
+        }
+        return "${c.get(Calendar.HOUR_OF_DAY)}:$mm"
+    }
 }

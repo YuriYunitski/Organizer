@@ -60,34 +60,6 @@ class Archive : AppCompatActivity(), ElementAdapterArchive.ElementAdapterListene
         db.insert(DataBase.TABLE_NOTES, null, cv)
         db.delete(DataBase.TABLE_DELETED, DataBase.COLUMN_ID + "=?", arrayOf(position.toString()))
         db.close()
-//        val myDBHandler = MyDBHandler(this, "notesDB.db", null, 1)
-//        val db: SQLiteDatabase = myDBHandler.writableDatabase
-//        val myDBHandlerArchive = MyDBHandlerArchive(this, "notesDB.db", null, 1)
-//        val aDb: SQLiteDatabase = myDBHandlerArchive.writableDatabase
-//        var tit = ""
-//        var ms = ""
-//        var dt = ""
-//        var tm = ""
-//        var id = ""
-//        val c: Cursor = aDb.rawQuery("SELECT ${MyDBHandlerArchive.COLUMN_TITLE}, ${MyDBHandlerArchive.COLUMN_MESSAGE}, ${MyDBHandlerArchive.COLUMN_DATE}, ${MyDBHandlerArchive.COLUMN_TIME} FROM ${MyDBHandlerArchive.TABLE_NOTES} WHERE ${MyDBHandlerArchive.COLUMN_ID} = '$position'", null)
-//        while (c.moveToNext()){
-//            tit = c.getString(c.getColumnIndex(MyDBHandlerArchive.COLUMN_TITLE))
-//            ms = c.getString(c.getColumnIndex(MyDBHandlerArchive.COLUMN_MESSAGE))
-//            dt = c.getString(c.getColumnIndex(MyDBHandlerArchive.COLUMN_DATE))
-//            tm = c.getString(c.getColumnIndex(MyDBHandlerArchive.COLUMN_TIME))
-//            id = position.toString()
-//        }
-//        c.close()
-//        val cv = ContentValues()
-//        cv.put(MyDBHandler.COLUMN_TITLE, tit)
-//        cv.put(MyDBHandler.COLUMN_MESSAGE, ms)
-//        cv.put(MyDBHandler.COLUMN_DATE, dt)
-//        cv.put(MyDBHandler.COLUMN_TIME, tm)
-//        cv.put(MyDBHandler.COLUMN_ID, id)
-//        db.insert(MyDBHandler.TABLE_NOTES, null, cv)
-//        aDb.delete(MyDBHandlerArchive.TABLE_NOTES, MyDBHandlerArchive.COLUMN_ID + "=?", arrayOf(position.toString()))
-//        aDb.close()
-//        db.close()
         updUI()
         return super.onContextItemSelected(item)
     }

@@ -78,13 +78,21 @@ class EditNote : AppCompatActivity(), View.OnClickListener {
         val y = c[Calendar.YEAR]
         val m = c[Calendar.MONTH] + 1
         val d = c[Calendar.DAY_OF_MONTH]
-        return "$d.$m.$y"
+        var mm: String = m.toString()
+        if (m < 10){
+            mm = "0$m"
+        }
+        return "$d.$mm.$y"
     }
     private fun timeC(): String{
         val c: Calendar = GregorianCalendar()
         val h = c[Calendar.HOUR_OF_DAY]
         val m = c[Calendar.MINUTE]
-        return "$h:$m"
+        var mm: String = m.toString()
+        if (m < 10){
+            mm = "0$m"
+        }
+        return "$h:$mm"
     }
     private fun save(){
         if ((ttl != title.text.toString() || msg != message.text.toString()) && (title.text.toString().isNotEmpty() || message.text.toString().isNotEmpty())) {
