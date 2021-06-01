@@ -47,22 +47,15 @@ class RemindActivity : AppCompatActivity(), View.OnClickListener {
         calendar = findViewById(R.id.calendarViewRemind)
         addRemind.setOnClickListener(this)
         chosenDate = getCurrentDate()
-        calendar.setOnDateChangeListener(object : CalendarView.OnDateChangeListener{
-            override fun onSelectedDayChange(
-                view: CalendarView,
-                year: Int,
-                month: Int,
-                dayOfMonth: Int
-            ) {
-                updUI()
-                var mm: String = (month + 1).toString()
-                if (month + 1 < 10){
-                    mm = "0${month + 1}"
-                }
-                chosenDate = "$dayOfMonth.$mm.$year"
-                updUI()
+        calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            updUI()
+            var mm: String = (month + 1).toString()
+            if (month + 1 < 10) {
+                mm = "0${month + 1}"
             }
-        })
+            chosenDate = "$dayOfMonth.$mm.$year"
+            updUI()
+        }
         updUI()
     }
 

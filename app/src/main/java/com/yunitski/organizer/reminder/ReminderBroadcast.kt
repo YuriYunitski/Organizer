@@ -1,31 +1,40 @@
 package com.yunitski.organizer.reminder
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import com.yunitski.organizer.R
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
+import android.os.Build
+import com.yunitski.organizer.reminder.ReminderTime.Companion.NOTIFICATION_CHANNEL_ID
+
 
 class ReminderBroadcast : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        val builder: NotificationCompat.Builder? = NotificationCompat.Builder(context!!, "ntf").setSmallIcon(
-            R.drawable.ic_baseline_check_24)?.setContentTitle("oi")?.setContentText("vei")?.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        val manager: NotificationManagerCompat = NotificationManagerCompat.from(context)
-        manager.notify(200, builder?.build()!!)
-    }
-
-    fun getMilliFromDate(dateFormat: String): Long {
-        var date: Date? = Date()
-        val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
-        try {
-            date = formatter.parse(dateFormat)
-        } catch (e: ParseException) {
-            e.printStackTrace()
+        val notificationManager =
+            context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notification: Notification? = intent!!.getParcelableExtra(NOTIFICATION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val notificationChannel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                "NOTIFICATION_CHANNEL_MONEY_KEEPER",
+                importance
+            )
+            notificationManager.createNotificationChannel(notificationChannel)
         }
-        return date!!.time
+        val id = intent.getIntExtra(NOTIFICATION_ID, 0)
+        notificationManager.notify(id, notification)
     }
+    companion object{
+        var NOTIFICATION_ID = "notification-id-mk"
+        var NOTIFICATION = "notification-mk"
+    }
+//    override fun onReceive(context: Context?, intent: Intent?) {
+//        val builder: NotificationCompat.Builder? = NotificationCompat.Builder(context!!, "ntf").setSmallIcon(
+//            R.drawable.ic_baseline_check_24)?.setContentTitle(intent?.getStringExtra("name"))?.setContentText(intent?.getStringExtra("desc"))?.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+//        val manager: NotificationManagerCompat = NotificationManagerCompat.from(context)
+//        manager.notify(200, builder?.build()!!)
+//    }
 }

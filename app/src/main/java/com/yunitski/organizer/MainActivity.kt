@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             fab?.setOnClickListener(this)
         }
         updateUi()
-        createNotificationChannel()
+//        createNotificationChannel()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -276,15 +276,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         const val LAYOUT_KEY = "1664"
     }
 
-    private fun createNotificationChannel(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val name: CharSequence = "MyChannel"
-            val description: String = "Channel for rem"
-            val imp: Int = NotificationManager.IMPORTANCE_DEFAULT
-            val channel: NotificationChannel = NotificationChannel("ntf", name, imp)
-            channel.description = description
-            val manager: NotificationManager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel)
-        }
-    }
+//    private fun createNotificationChannel(){
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            val name: CharSequence = "MyChannel"
+//            val description: String = "Channel for rem"
+//            val imp: Int = NotificationManager.IMPORTANCE_DEFAULT
+//            val channel: NotificationChannel = NotificationChannel("ntf", name, imp)
+//            channel.description = description
+//            val manager: NotificationManager = getSystemService(NotificationManager::class.java)
+//            manager.createNotificationChannel(channel)
+//        }
+//    }
 }
